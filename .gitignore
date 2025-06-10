@@ -1,0 +1,10 @@
+ # .gitignore
+
+# Terraform state files
+.terraform/
+*.tfstate
+*.tfstate.backup
+
+# Terraform sensitive variable files
+*.tfvars
+*.tfvars.json
