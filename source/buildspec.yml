@@ -1,0 +1,35 @@
+version: 0.2
+env:
+  variables:
+    ECR_REPO_NAME: rolling_deploy
+  secrets-manager:
+    DOCKERHUB_USERNAME: "dockerEnv:DOCKERHUB_USERNAME"
+    DOCKERHUB_PASSWORD: "dockerEnv:DOCKERHUB_PASSWORD"
+phases:
+  pre_build:
+    commands:
+      - echo "hello"
+
+      # AWS_ACCOUNT_ID を動的に取得
+      - export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+      - ECR_MAIN_URI="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+
+      # ECR login
+      - aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_MAIN_URI}
+
+      # Docker Hub login (この行も問題ないか確認)
+      - echo "$DOCKERHUB_PASSWORD" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin
+
+      - ECR_IMAGE_URI="${ECR_MAIN_URI}/${ECR_REPO_NAME}:latest"
+  build:
+    commands:
+      - docker build -t ${ECR_REPO_NAME}:latest .
+  post_build:
+    commands:
+      - docker tag ${ECR_REPO_NAME}:latest ${ECR_IMAGE_URI}
+      - docker push ${ECR_IMAGE_URI}
+      - printf '[{"name":"code-nginx-contaier-name","imageUri":"%s"}]' ${ECR_IMAGE_URI} > imagedefinitions.json
+        
+  artifacts:
+    files:
+      - imagedefinitions.json
