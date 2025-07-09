@@ -3,7 +3,6 @@ resource "aws_codebuild_project" "test-build-project" {
   name         = "${var.project_name}-build-project"
   service_role = aws_iam_role.test-build-project-role.arn
   build_timeout = 5 # タイムアウトは適切に設定
-
   environment {
     compute_type    = "BUILD_GENERAL1_SMALL"
     image           = "aws/codebuild/standard:7.0"

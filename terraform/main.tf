@@ -79,7 +79,11 @@ resource "aws_nat_gateway" "nat_gateway" {
   count         = length(aws_subnet.public)
   allocation_id = aws_eip.nat_gateway_eip[count.index].id
   subnet_id     = aws_subnet.public[count.index].id
-
+  
+  timeouts {
+    create = "10m"
+    delete = "10m"
+  }
   tags = {
     Name = "${var.project_name}-nat-gateway-${count.index}"
   }

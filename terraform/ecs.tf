@@ -54,7 +54,12 @@ resource "aws_lb" "main" {
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb_sg.id]
   subnets            = aws_subnet.public[*].id # パブリックサブネットに配置
-
+  
+  timeouts {
+    create = "10m"
+    update = "10m"
+    delete = "10m"
+  }
   tags = {
     Name = "${var.project_name}-ALB"
   }
@@ -106,7 +111,10 @@ resource "aws_ecs_service" "container-test-service" {
   task_definition = aws_ecs_task_definition.container-test-task.arn
   desired_count   = 1
   launch_type     = "FARGATE"
-
+  depends_on = [
+    aws_lb.main,
+    aws_lb_target_group.main
+  ]
   network_configuration {
     subnets          = aws_subnet.private[*].id # プライベートサブネットに配置
     security_groups  = [aws_security_group.fargate_sg.id] # Fargate用セキュリティグループを使用

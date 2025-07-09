@@ -1,5 +1,8 @@
  # .gitignore
 
+# Terraform iam file
+iam.tf
+
 # Terraform state files
 .terraform/
 *.tfstate

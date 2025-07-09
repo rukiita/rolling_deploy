@@ -3,6 +3,7 @@
 resource "aws_secretsmanager_secret" "docker_credentials" {
   name        = var.dockerhub_secret_name
   description = "Docker Hub credentials for CodeBuild"
+  recovery_window_in_days = 0
 
   tags = {
     Name = "${var.project_name}-DockerHubCredentials"
