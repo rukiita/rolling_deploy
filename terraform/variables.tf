@@ -98,7 +98,7 @@ variable "dockerhub_password" {
   description = "Docker Hub password for secrets manager"
   type        = string
   sensitive   = true
-
+}
 # アベイラビリティゾーンのリスト
 data "aws_availability_zones" "available" {
   state = "available"
