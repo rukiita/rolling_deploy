@@ -9,7 +9,6 @@ resource "aws_codebuild_project" "test-build-project" {
     type            = "LINUX_CONTAINER"
     privileged_mode = true
 
-    # environment_variables を environment_variable に変更し、リスト形式にする
     environment_variable {
       name  = "AWS_REGION"
       value = data.aws_region.current.name
