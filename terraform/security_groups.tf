@@ -7,7 +7,7 @@ resource "aws_security_group" "alb_sg" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] # 全てのIPからのHTTPアクセスを許可
+    cidr_blocks = ["0.0.0.0/0"] 
   }
   # HTTPSも許可する場合は追加
   # ingress {
@@ -21,7 +21,7 @@ resource "aws_security_group" "alb_sg" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"] # どこへでも出力 (Fargateタスクへ)
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   tags = {
